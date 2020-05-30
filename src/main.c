@@ -180,7 +180,9 @@ void addTransaction(int value, struct FinancialTransaction **list, unsigned int 
     strncpy((*list)[index].description, description, 81);
 }
 
-void printTransactions(unsigned int listSize, struct FinancialTransaction *list) {
+void printTransactionsandSums(unsigned int listSize, struct FinancialTransaction *list) {
+    float incomeSum = 0;
+    float expenseSum = 0;
     printf("Transactions made\n");
     if(listSize == 0) {
         printf("No transactions have been made\n");
@@ -188,16 +190,28 @@ void printTransactions(unsigned int listSize, struct FinancialTransaction *list)
         for(int i = 0; i < listSize; i++) {
             printf("\n");
             printf("Type of transaction: ");
-            if(&list[i].type > 0) {
+            if(list[i].type > 0) {
                 printf("Income\n");
+                incomeSum += list[i].moneyAmount;
             } else {
                 printf("Expense\n");
+                expenseSum += list[i].moneyAmount;
             }
             printf("Description: %s\n", &list[i].description);
             printf("Amount of money: %.2f\n", list[i].moneyAmount);
             printf("Date of transaction: %d/%d/%d\n", list[i].dateOfTransaction.day, list[i].dateOfTransaction.month, list[i].dateOfTransaction.year);
         }
     }
+    printf("\n");
+    float sum = incomeSum - expenseSum;
+    if(sum >= 0) {
+        printf("Your incomes and expenses are tracked. You have currently earned %.2f more than you have spent\n", sum );
+    } else {
+        sum *= -1;
+        printf("Your incomes and expenses are tracked. You have currently spent %.2f more than you have earned\n", sum );
+    }
+    printf("Sum of incomes: %.2f\n", incomeSum);
+    printf("Sum of expenses: %.2f\n", expenseSum);
     printf("\n");
 }
 
@@ -226,7 +240,7 @@ int main() {
                 break;
             }
             case 6: {
-                printTransactions(listSize, records);
+                printTransactionsandSums(listSize, records);
                 break;
             }
             case 7: {

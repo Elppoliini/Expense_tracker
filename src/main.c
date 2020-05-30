@@ -180,7 +180,7 @@ void addTransaction(int value, struct FinancialTransaction **list, unsigned int 
     strncpy((*list)[index].description, description, 81);
 }
 
-void printTransactionsandSums(unsigned int listSize, struct FinancialTransaction *list) {
+void printTransactionsAndSums(unsigned int listSize, struct FinancialTransaction *list) {
     float incomeSum = 0;
     float expenseSum = 0;
     printf("Transactions made\n");
@@ -204,14 +204,10 @@ void printTransactionsandSums(unsigned int listSize, struct FinancialTransaction
     }
     printf("\n");
     float sum = incomeSum - expenseSum;
-    if(sum >= 0) {
-        printf("Your incomes and expenses are tracked. You have currently earned %.2f more than you have spent\n", sum );
-    } else {
-        sum *= -1;
-        printf("Your incomes and expenses are tracked. You have currently spent %.2f more than you have earned\n", sum );
-    }
+    printf("Your incomes and expenses are tracked.\n");
     printf("Sum of incomes: %.2f\n", incomeSum);
-    printf("Sum of expenses: %.2f\n", expenseSum);
+    printf("Sum of expenses: %.2f\n", -expenseSum);
+    printf("The sum of your incomes(+) and expenses(-) is %.2f\n", sum);
     printf("\n");
 }
 
@@ -240,11 +236,12 @@ int main() {
                 break;
             }
             case 6: {
-                printTransactionsandSums(listSize, records);
+                printTransactionsAndSums(listSize, records);
                 break;
             }
             case 7: {
                 running = 0;
+                free(records);
                 printf("Exiting the program\n");
                 break;
             }
@@ -253,5 +250,6 @@ int main() {
             }
         }
     }
+
     return 0;
 };

@@ -211,6 +211,18 @@ void printTransactionsAndSums(unsigned int listSize, struct FinancialTransaction
     printf("\n");
 }
 
+int saveRecords(char *fileName, struct FinancialTransaction *list, unsigned int listSize) {
+    FILE *file = fopen(fileName, "wb");
+    if(file == NULL
+        || fwrite(&listSize, sizeof(unsigned int), 1, file) != 1
+        || fwrite(list, sizeof(struct FinancialTransaction), listSize, file) != listSize) {
+        fclose(file);
+        return 1;
+    }
+    fclose(file);
+    return 0;
+}
+
 int main() {
     printf("Expense tracker\n\n");
     struct FinancialTransaction *records = NULL;
@@ -223,6 +235,15 @@ int main() {
             case 1: {
                 initialize(&records, &listSize);
                 printf("Records are initialized\n");
+                break;
+            }
+            case 2: {
+                printf("Saving new financial records\n");
+                if(saveRecords("expenseTracker.data", records, listSize)) {
+                    printf("Saving failed\n");
+                } else {
+                    printf("Saving successful\n");
+                }
                 break;
             }
             case 4: {

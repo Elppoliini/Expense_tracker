@@ -53,9 +53,10 @@ struct FinancialTransaction {
     struct Date dateOfTransaction;
 };
 
-void initialize(struct FinancialTransaction **list) {
+void initialize(struct FinancialTransaction **list, unsigned int *listSize) {
     free(*list);
     *list = NULL;
+    *listSize = 0;
 };
 
 float askMoneyAmount() {
@@ -179,6 +180,27 @@ void addTransaction(int value, struct FinancialTransaction **list, unsigned int 
     strncpy((*list)[index].description, description, 81);
 }
 
+void printTransactions(unsigned int listSize, struct FinancialTransaction *list) {
+    printf("Transactions made\n");
+    if(listSize == 0) {
+        printf("No transactions have been made\n");
+    } else {
+        for(int i = 0; i < listSize; i++) {
+            printf("\n");
+            printf("Type of transaction: ");
+            if(&list[i].type > 0) {
+                printf("Income\n");
+            } else {
+                printf("Expense\n");
+            }
+            printf("Description: %s\n", &list[i].description);
+            printf("Amount of money: %.2f\n", list[i].moneyAmount);
+            printf("Date of transaction: %d/%d/%d\n", list[i].dateOfTransaction.day, list[i].dateOfTransaction.month, list[i].dateOfTransaction.year);
+        }
+    }
+    printf("\n");
+}
+
 int main() {
     printf("Expense tracker\n\n");
     struct FinancialTransaction *records = NULL;
@@ -189,7 +211,7 @@ int main() {
         int command = readCommand(1, 7);
         switch(command) {
             case 1: {
-                initialize(&records);
+                initialize(&records, &listSize);
                 printf("Records are initialized\n");
                 break;
             }
@@ -201,6 +223,10 @@ int main() {
             case 5: {
                 printf("New expense\n");
                 addTransaction(-1, &records, &listSize);
+                break;
+            }
+            case 6: {
+                printTransactions(listSize, records);
                 break;
             }
             case 7: {

@@ -223,6 +223,29 @@ int saveRecords(char *fileName, struct FinancialTransaction *list, unsigned int 
     return 0;
 }
 
+int readRecords(char* fileName, struct FinancialTransaction **list, unsigned int *listSize) {
+    if(*list != NULL) {
+        initialize(list, listSize);
+    }
+    FILE *file = fopen(fileName, "rb");
+    if(file == NULL) {
+        return 1;
+    }
+    if(fread(listSize, sizeof(unsigned int), 1, file) != 1) {
+        return 1;
+    }
+    *list = malloc(*listSize * sizeof(struct FinancialTransaction));
+    if (*list == NULL) {
+            return 1;
+    }
+    if(fread(*list,sizeof(struct FinancialTransaction), *listSize, file) != *listSize) {
+        fclose(file);
+        return 1;
+    }
+    fclose(file);
+    return 0;
+}
+
 int main() {
     printf("Expense tracker\n\n");
     struct FinancialTransaction *records = NULL;
@@ -246,6 +269,15 @@ int main() {
                 }
                 break;
             }
+            case 3: {
+                printf("Reading financial records from a file\n");
+                if(readRecords("expenseTracker.data", &records, &listSize)) {
+                    printf("Reading failed\n");
+                } else {
+                    printf("Reading successful\n");
+                }
+                break;
+            }
             case 4: {
                 printf("New Income\n");
                 addTransaction(1, &records, &listSize);
@@ -262,7 +294,7 @@ int main() {
             }
             case 7: {
                 running = 0;
-                free(records);
+                initialize(&records, &listSize);
                 printf("Exiting the program\n");
                 break;
             }

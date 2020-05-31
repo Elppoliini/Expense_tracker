@@ -5,7 +5,7 @@
 #include <math.h>
 
 void printCommands() {
-    printf("Commands:\n");
+    printf("Commands:\n\n");
     printf("    1. Initialize (clear all records)\n");
     printf("    2. Save financial records\n");
     printf("    3. Read financial records\n");
@@ -34,7 +34,7 @@ int readCommand(int min, int max) {
             commandnr = atoi(input);
         }
         if(commandnr >= min && commandnr <= max) break;
-        printf("Invalid input. Please enter the command number between %d - %d\n", min, max);
+        printf("Invalid input. Please enter the command number between %d - %d\n\n", min, max);
         clearInputLine();
     }
     clearInputLine();
@@ -260,35 +260,37 @@ int main() {
         switch(command) {
             case 1: {
                 initialize(&records, &listSize);
-                printf("Records are initialized\n");
+                printf("Records are initialized\n\n");
                 break;
             }
             case 2: {
                 printf("Saving new financial records\n");
                 if(saveRecords("expenseTracker.data", records, listSize)) {
-                    printf("Saving failed\n");
+                    printf("Saving failed\n\n");
                 } else {
-                    printf("Saving successful\n");
+                    printf("Saving successful\n\n");
                 }
                 break;
             }
             case 3: {
                 printf("Reading financial records from a file\n");
                 if(readRecords("expenseTracker.data", &records, &listSize)) {
-                    printf("Reading failed\n");
+                    printf("Reading failed\n\n");
                 } else {
-                    printf("Reading successful\n");
+                    printf("Reading successful\n\n");
                 }
                 break;
             }
             case 4: {
-                printf("New Income\n");
+                printf("New Income\n\n");
                 addTransaction(1, &records, &listSize);
+                printf("\n");
                 break;
             }
             case 5: {
-                printf("New expense\n");
+                printf("New expense\n\n");
                 addTransaction(-1, &records, &listSize);
+                printf("\n");
                 break;
             }
             case 6: {
@@ -302,7 +304,7 @@ int main() {
                 break;
             }
             default: {
-                printf("Invalid command\n");
+                printf("Error. Invalid command\n\n");
             }
         }
     }

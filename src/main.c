@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 void printCommands() {
     printf("Commands:\n");
@@ -73,7 +74,7 @@ float askMoneyAmount() {
             if(ispunct(input[i]) && input[i] != '.') {
                 puncts++;
             }
-            if(input[i] == '.' && dots < 2) {
+            if(input[i] == '.') {
                 dots++;
             } else if (isalpha(input[i])){
                 alphas++;
@@ -81,10 +82,13 @@ float askMoneyAmount() {
             }
         }
         if(alphas == 0 && puncts == 0 && dots >=0 && dots <=1) {
-            money = atof(input);
-            break;
+            float temp = atof(input);
+            if(isinf(temp) == 0) { //Check that the float is not infinity value
+                money = temp;
+                break;
+            }
         }
-        printf("The value needs to be a float\n");
+        printf("The value needs to be a positive float\n");
         clearInputLine();
     }
     return money;

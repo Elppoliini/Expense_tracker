@@ -30,7 +30,7 @@ int readCommand(int min, int max) {
     while(commandnr < min || commandnr > max) {
         char input[500];
         scanf("%s", &input);
-        if(strlen(input) ==1 && isdigit(input[0]) ) {
+        if(strlen(input) == 1 && isdigit(input[0]) ) {
             commandnr = atoi(input);
         }
         if(commandnr >= min && commandnr <= max) break;

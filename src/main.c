@@ -16,6 +16,7 @@ void printCommands() {
     printf("\n");
 };
 
+// Clear leftover chars from input stream. Stops after a new line is found.
 void clearInputLine() {
 int c;
     while( (c = fgetc(stdin)) != EOF) {
@@ -25,6 +26,7 @@ int c;
     }
 }
 
+// Read command from given range.
 int readCommand(int min, int max) {
     int commandnr = 0;
     while(commandnr < min || commandnr > max) {
@@ -41,25 +43,30 @@ int readCommand(int min, int max) {
     return commandnr;
 };
 
+// Struct to represent a date.
 struct Date {
     int day;
     int month;
     int year;
 };
 
+// Struct to represent a transaction.
 struct FinancialTransaction {
-    int type; // positive is income and negative expense
+    int type; // positive is income and negative is expense
     char description[81];
     float moneyAmount;
     struct Date dateOfTransaction;
 };
 
+// Initializes the list.
+// Frees the content of the list and sets the listSize to 0.
 void initialize(struct FinancialTransaction **list, unsigned int *listSize) {
     free(*list);
     *list = NULL;
     *listSize = 0;
 };
 
+// Asks the user for a positive float.
 float askMoneyAmount() {
     float money = -1;
     printf("Give amount:\n");
@@ -83,7 +90,7 @@ float askMoneyAmount() {
         }
         if(alphas == 0 && puncts == 0 && dots >=0 && dots <=1) {
             float temp = atof(input);
-            if(isinf(temp) == 0) { //Check that the float is not infinity value
+            if(isinf(temp) == 0) { // check that the float is not infinity value
                 money = temp;
                 break;
             }
@@ -94,10 +101,13 @@ float askMoneyAmount() {
     return money;
 };
 
+// Checks if given year is a leap year.
 int isLeapYear(int year) {
     return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)); // if the year is leap year return 1
 }
 
+
+// Validates the given date for the given range of years.
 int isValidDate(struct Date *date, unsigned int minYear, unsigned int maxYear)
 {
     // check range of year,month and day
@@ -123,6 +133,7 @@ int isValidDate(struct Date *date, unsigned int minYear, unsigned int maxYear)
     return 1;
 }
 
+// Asks the date from the user.
 struct Date askDate() {
     struct Date newDate = {0};
     while(!isValidDate(&newDate, 2000, 2020)) {
@@ -142,6 +153,7 @@ struct Date askDate() {
     return newDate;
 }
 
+// Asks the description from the user and checks that the size is not more than 80.
 void addDescription(char *description) {
     while(1){
         printf("Add description:\n");
@@ -162,6 +174,8 @@ void addDescription(char *description) {
     }
 }
 
+// Adds a new transaction to the list.
+// Value tells if the transaction is an income or an expense. Increases the listSize.
 void addTransaction(int value, struct FinancialTransaction **list, unsigned int *listSize) {
     char description[81] = {0};
     addDescription(description);
@@ -183,6 +197,7 @@ void addTransaction(int value, struct FinancialTransaction **list, unsigned int 
     strncpy((*list)[index].description, description, 81);
 }
 
+// Prints all transactions in the list and makes a report of the sums of incomes and expenses.
 void printTransactionsAndSums(unsigned int listSize, struct FinancialTransaction *list) {
     float incomeSum = 0;
     float expenseSum = 0;
@@ -214,6 +229,7 @@ void printTransactionsAndSums(unsigned int listSize, struct FinancialTransaction
     printf("\n");
 }
 
+// Saves list to given fileName and if file doesn't exist it is created.
 int saveRecords(char *fileName, struct FinancialTransaction *list, unsigned int listSize) {
     FILE *file = fopen(fileName, "wb");
     if(file == NULL
@@ -226,6 +242,7 @@ int saveRecords(char *fileName, struct FinancialTransaction *list, unsigned int 
     return 0;
 }
 
+// Reads records from a file. If list has any transactions they are removed before reading new ones.
 int readRecords(char* fileName, struct FinancialTransaction **list, unsigned int *listSize) {
     if(*list != NULL) {
         initialize(list, listSize);
@@ -257,6 +274,9 @@ int main() {
     while(running) {
         printCommands();
         int command = readCommand(1, 7);
+
+        // Case for each command.
+        // Default if something goes wrong when reading the command (return value is not valid)
         switch(command) {
             case 1: {
                 initialize(&records, &listSize);

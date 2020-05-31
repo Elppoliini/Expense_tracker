@@ -145,8 +145,8 @@ struct Date askDate() {
 void addDescription(char *description) {
     while(1){
         printf("Add description:\n");
-        char temp[81];
-        if(fgets(temp, 81, stdin) != NULL) {
+        char temp[82];
+        if(fgets(temp, 82, stdin) != NULL) {
             if(temp[strlen(temp)-1] == '\n') { // if temp ends to line feed, change it to null
                 strcpy(description, temp); 
                 description[strlen(description)-1] = 0;

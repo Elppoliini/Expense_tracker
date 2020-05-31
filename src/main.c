@@ -165,7 +165,6 @@ void addDescription(char *description) {
 void addTransaction(int value, struct FinancialTransaction **list, unsigned int *listSize) {
     char description[81] = {0};
     addDescription(description);
-    printf("Description is %s\n", description);
     float moneyAmount = askMoneyAmount();
     struct Date newDate = askDate();
     (*listSize)++;
